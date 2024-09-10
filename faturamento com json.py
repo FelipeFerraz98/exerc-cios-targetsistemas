@@ -10,20 +10,20 @@ b) Podem existir dias sem faturamento, como nos finais de semana e feriados. Est
 
 import json
 
-def analyze_revenue(file_path: str) -> int:
+def analyze_revenue(file_path: str):
     # Abra e leia o arquivo JSON
     with open(file_path, 'r') as file:
-        data = json.load(file)["revenue"]
+        data = json.load(file)
+    
+    # Filtrar dias sem faturamento (valor > 0)
+    revenue_days = [entry['valor'] for entry in data if entry['valor'] > 0]
 
-    # Filtrar dias sem faturamento
-    revenue_days = [rev for rev in data if rev > 0]
-
-    # Calcular o faturamento mínima, máxima e média
+    # Calcular o faturamento mínimo, máximo e a média
     min_revenue = min(revenue_days)
     max_revenue = max(revenue_days)
     average_revenue = sum(revenue_days) / len(revenue_days)
 
-    # Conte o número de dias em que a faturamento ficou acima da média
+    # Contar o número de dias em que o faturamento foi superior à média
     days_above_average = len([rev for rev in revenue_days if rev > average_revenue])
 
     return min_revenue, max_revenue, days_above_average
